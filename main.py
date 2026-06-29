@@ -1,20 +1,13 @@
 from ultralytics import YOLO
 import cv2
 from datetime import datetime
-# -----------------------------
-# Load the pretrained YOLOv8 model
-# -----------------------------
+
 model = YOLO("yolov8n.pt")
 
-# -----------------------------
-# Open the default webcam
-# 0 = Laptop webcam
-# -----------------------------
+
 cap = cv2.VideoCapture(0)
 
-# -----------------------------
-# Keep reading frames until the user quits
-# -----------------------------
+
 alerted_ids = set()
 while True:
 
@@ -26,14 +19,8 @@ while True:
         print("Failed to capture frame.")
         break
 
-    # ----------------------------------
-    # Run YOLO object detection
-    # ----------------------------------
     results = model.track(frame, persist=True)
 
-    # ----------------------------------
-    # Process every detected object
-    # ----------------------------------
     for box in results[0].boxes:
         if box.id is None:
          continue
@@ -53,9 +40,7 @@ while True:
             cv2.imwrite(filename, frame)
             print(f"📸 Evidence saved: {filename}")
             alerted_ids.add(track_id)
-    # ----------------------------------
-    # Draw bounding boxes on the frame
-    # ----------------------------------
+
     annotated_frame = results[0].plot()
 
     # Show the annotated frame
@@ -65,9 +50,6 @@ while True:
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# -----------------------------
-# Release resources
-# -----------------------------
 cap.release()
 cv2.destroyAllWindows()
 
