@@ -1,5 +1,5 @@
 # AI Smart Surveillance System
-
+[In progress]
 ## Overview
 
 A real-time AI surveillance system built using YOLOv8 and OpenCV.
