@@ -1,10 +1,20 @@
 from ultralytics import YOLO
 import cv2
 from datetime import datetime
+from database import initialize_database, insert_detection
 
+# Create the database/table if it doesn't exist
+initialize_database()
+
+# -----------------------------
+# Load the pretrained YOLOv8 model
+# -----------------------------
 model = YOLO("yolov8n.pt")
 
-
+# -----------------------------
+# Open the default webcam
+# 0 = Laptop webcam
+# -----------------------------
 cap = cv2.VideoCapture(0)
 
 
@@ -35,10 +45,24 @@ while True:
           if track_id not in alerted_ids:
 
             print(f"🚨 New Person Detected! ID = {track_id}")
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"evidence/person_{track_id}_{timestamp}.jpg"
-            cv2.imwrite(filename, frame)
-            print(f"📸 Evidence saved: {filename}")
+            now = datetime.now()
+            db_timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+            file_timestamp = now.strftime("%Y%m%d_%H%M%S")
+            filename = f"evidence/person_{track_id}_{file_timestamp}.jpg"
+            saved = cv2.imwrite(filename, frame)
+
+            if saved:
+             insert_detection(
+             track_id,
+             db_timestamp,
+             confidence,
+             filename
+            )
+             print(f"📸 Evidence saved: {filename}")
+
+            else:
+             print("❌ Failed to save evidence image.")
+
             alerted_ids.add(track_id)
 
     annotated_frame = results[0].plot()
@@ -52,4 +76,3 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
-
