@@ -10,6 +10,31 @@
     <h1>AI Smart Surveillance Dashboard</h1>
 
     <h2>Dashboard is working!</h2>
+    <h2>Detection History</h2>
+
+<table border="1" cellpadding="8">
+
+<tr>
+    <th>ID</th>
+    <th>Track ID</th>
+    <th>Timestamp</th>
+    <th>Confidence</th>
+</tr>
+
+{% for detection in detections %}
+
+<tr>
+
+    <td>{{ detection[0] }}</td>
+    <td>{{ detection[1] }}</td>
+    <td>{{ detection[2] }}</td>
+    <td>{{ "%.2f"|format(detection[3]) }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
 
 </body>
 
