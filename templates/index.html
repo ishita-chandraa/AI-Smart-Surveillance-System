@@ -2,40 +2,475 @@
 <html>
 
 <head>
-    <title>AI Smart Surveillance Dashboard</title>
-</head>
 
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Smart Surveillance Dashboard</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Smart Surveillance Dashboard</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="/static/style.css">
+
+
+    <link rel="stylesheet"
+          href="/static/style.css">
+
+</head>
 <body>
 
-    <h1>AI Smart Surveillance Dashboard</h1>
+<div class="container mt-5">
 
-    <h2>Dashboard is working!</h2>
-    <h2>Detection History</h2>
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">
+            AI Smart Surveillance Dashboard
+        </h1>
 
-<table border="1" cellpadding="8">
+        <p class="text-secondary fs-5">
+         Real-time Person Detection & Analytics
+        </p>
+    </div>
 
-<tr>
-    <th>ID</th>
-    <th>Track ID</th>
-    <th>Timestamp</th>
-    <th>Confidence</th>
-</tr>
+<div class="row">
 
-{% for detection in detections %}
+    <div class="col-md-3 mb-4">
 
-<tr>
+        <div class="card total">
 
-    <td>{{ detection[0] }}</td>
-    <td>{{ detection[1] }}</td>
-    <td>{{ detection[2] }}</td>
-    <td>{{ "%.2f"|format(detection[3]) }}</td>
+            <div class="card-body text-center">
 
-</tr>
+                <h5 class="card-title">Total Detections</h5>
 
-{% endfor %}
+                <h2>{{ total }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-4">
+
+        <div class="card today">
+
+            <div class="card-body text-center">
+
+                <h5 class="card-title">Today</h5>
+
+                <h2>{{ today }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-4">
+
+        <div class="card week">
+
+            <div class="card-body text-center">
+
+                <h5 class="card-title">Week</h5>
+
+                <h2>{{ week }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3 mb-4">
+
+        <div class="card month">
+
+            <div class="card-body text-center">
+
+                <h5 class="card-title">Month</h5>
+
+                <h2>{{ month }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="card shadow-sm mt-5">
+
+    <div class="card-body">
+
+        <h3 class="mb-4">
+            Daily Detections
+        </h3>
+
+         <div class="chart-container">
+    <canvas id="dailyChart"></canvas>
+</div>
+
+    </div>
+
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h3 class="mb-4">
+                    Weekly Detections
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-6">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h3 class="mb-4">
+                    Confidence Distribution
+                </h3>
+
+                <div class="chart-container">
+                    <canvas id="confidenceChart"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="mt-5">
+
+    <h3 class="fw-bold mb-4">
+        Latest Detection
+    </h3>
+
+    <div class="card">
+
+        <div class="card-body">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <p><strong>Track ID:</strong> {{ latest[1] }}</p>
+
+                    <p><strong>Detection Time:</strong> {{ latest[2] }}</p>
+
+                    <p><strong>Confidence:</strong> {{ "%.2f"|format(latest[3] * 100) }}%</p>
+
+                </div>
+
+                <div class="col-md-4 text-center">
+
+                    <a href="/{{ latest[4] }}" target="_blank">
+
+                    <img src="/{{ latest[4] }}"
+                    class="evidence-img"
+                    alt="Evidence Image">
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+
+    <div class="card shadow-sm mt-5">
+
+    <div class="card-body">
+
+        <div class="mb-3">
+
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+
+    <input
+        type="text"
+        id="searchInput"
+        class="form-control me-3"
+        placeholder="🔍 Search by Track ID or Timestamp">
+
+    <a href="/download-csv" class="btn btn-primary">
+        📥 Export CSV
+    </a>
+
+</div>
+
+        <h3 class="mb-4">
+            Detection History
+        </h3>
+
+        <table 
+        id="historyTable"
+        class="table table-striped table-hover align-middle">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Track ID</th>
+            <th>Timestamp</th>
+            <th>Confidence</th>
+            <th>Evidence</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+    {% for detection in detections %}
+
+    <tr>
+
+        <td>{{ detection[0] }}</td>
+
+        <td>{{ detection[1] }}</td>
+
+        <td>{{ detection[2] }}</td>
+
+        <td>{{ "%.2f"|format(detection[3] * 100) }}%</td>
+
+        <td>
+            <a href="/{{ detection[4] }}" target="_blank">
+                <img
+                    src="/{{ detection[4] }}"
+                    class="table-thumbnail"
+                    alt="Evidence">
+            </a>
+        </td>
+
+    </tr>
+
+    {% endfor %}
+
+    </tbody>
 
 </table>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script>
+
+const dailyData = {{ daily_data | tojson }};
+const weeklyData = {{ weekly_data | tojson }};
+const confidenceData = {{ confidence_data | tojson }};
+
+// ---------- Daily Line Chart ----------
+
+new Chart(document.getElementById("dailyChart"), {
+
+    type: "line",
+
+    data: {
+
+        labels: dailyData.map(item => item[0]),
+
+        datasets: [{
+
+            label: "Detections",
+
+            data: dailyData.map(item => item[1]),
+
+            borderColor: "#60a5fa",
+
+            backgroundColor: "rgba(96,165,250,0.2)",
+
+            fill: true,
+
+            tension: 0.4
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+        maintainAspectRatio: false,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        }
+
+    }
+
+});
+
+
+// ---------- Weekly Bar Chart ----------
+
+new Chart(document.getElementById("weeklyChart"), {
+
+    type: "bar",
+
+    data: {
+
+        labels: weeklyData.map(item => item[0]),
+
+        datasets: [{
+
+            label: "Weekly Detections",
+
+            data: weeklyData.map(item => item[1]),
+
+            backgroundColor: "#86efac"
+
+        }]
+
+    },
+
+    options: {
+
+        maintainAspectRatio: false,
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            }
+
+        }
+
+    }
+
+});
+
+
+// ---------- Confidence Pie Chart ----------
+
+new Chart(document.getElementById("confidenceChart"), {
+
+    type: "pie",
+
+    data: {
+
+        labels: confidenceData.map(item => item[0]),
+
+        datasets: [{
+
+            data: confidenceData.map(item => item[1]),
+
+            backgroundColor: [
+
+                "#93c5fd",
+
+                "#fde68a",
+
+                "#f9a8d4"
+
+            ]
+
+        }]
+
+    }
+
+});
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function () {
+
+    const searchText = searchInput.value.toLowerCase();
+
+    const rows = document.querySelectorAll("#historyTable tbody tr");
+
+    rows.forEach(function(row){
+
+        const rowText = row.textContent.toLowerCase();
+
+        if(rowText.includes(searchText)){
+
+            row.style.display = "";
+
+        }
+
+        else{
+
+            row.style.display = "none";
+
+        }
+
+    });
+
+});
+
+</script>
 </body>
 
 </html>

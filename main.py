@@ -2,6 +2,7 @@ from ultralytics import YOLO
 import cv2
 from datetime import datetime
 from database import initialize_database, insert_detection
+from email_alert import send_email
 
 # Create the database/table if it doesn't exist
 initialize_database()
@@ -58,10 +59,23 @@ while True:
              confidence,
              filename
             )
-             print(f"📸 Evidence saved: {filename}")
+             
+             try:
+
+               send_email(
+               filename,
+               confidence
+             )
+
+               print("📧 Email Alert Sent!")
+
+             except Exception as e:
+
+              print("❌ Email failed:", e)
+              print(f"📸 Evidence saved: {filename}")
 
             else:
-             print("❌ Failed to save evidence image.")
+              print("❌ Failed to save evidence image.")
 
             alerted_ids.add(track_id)
 

@@ -196,5 +196,66 @@ def get_daily_statistics():
 
     return rows
 
+def get_daily_detections():
+
+    import sqlite3
+
+    conn = sqlite3.connect("detections.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT DATE(timestamp), COUNT(*)
+        FROM detections
+        GROUP BY DATE(timestamp)
+        ORDER BY DATE(timestamp)
+    """)
+
+    data = cursor.fetchall()
+
+    conn.close()
+
+    return data
+
+def get_weekly_detections():
+
+    conn = sqlite3.connect("detections.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT strftime('%Y-%W', timestamp), COUNT(*)
+        FROM detections
+        GROUP BY strftime('%Y-%W', timestamp)
+        ORDER BY strftime('%Y-%W', timestamp)
+    """)
+
+    data = cursor.fetchall()
+
+    conn.close()
+
+    return data
+
+def get_confidence_distribution():
+
+    conn = sqlite3.connect("detections.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            CASE
+                WHEN confidence < 0.70 THEN 'Low'
+                WHEN confidence < 0.90 THEN 'Medium'
+                ELSE 'High'
+            END,
+            COUNT(*)
+        FROM detections
+        GROUP BY 1
+    """)
+
+    data = cursor.fetchall()
+
+    conn.close()
+
+    return data
+
 
 
